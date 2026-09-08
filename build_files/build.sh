@@ -937,7 +937,7 @@ chmod 0644 /etc/xdg/autostart/trayscale.desktop
 
 # --- firewalld default zone: uncomment every line to the next ruler
 # --------------------------------------------------------------------------
-# FIREWALLD_CONF="$(readlink -f /etc/firewalld/firewalld.conf)"
+FIREWALLD_CONF="$(readlink -f /etc/firewalld/firewalld.conf)"
 cp "${FIREWALLD_CONF}" "${FIREWALLD_CONF}.bak"
 if grep -q '^DefaultZone=' "${FIREWALLD_CONF}"; then
     sed -i 's/^DefaultZone=.*/DefaultZone=drop/' "${FIREWALLD_CONF}"
