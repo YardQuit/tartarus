@@ -939,16 +939,16 @@ chmod 0644 /etc/xdg/autostart/trayscale.desktop
 # --------------------------------------------------------------------------
 # FIREWALLD_CONF="$(readlink -f /etc/firewalld/firewalld.conf)"
 cp "${FIREWALLD_CONF}" "${FIREWALLD_CONF}.bak"
-# if grep -q '^DefaultZone=' "${FIREWALLD_CONF}"; then
-#     sed -i 's/^DefaultZone=.*/DefaultZone=drop/' "${FIREWALLD_CONF}"
-# else
-#     echo 'DefaultZone=drop' >> "${FIREWALLD_CONF}"
-# fi
-# firewall-offline-cmd --get-default-zone | grep -qx drop
+if grep -q '^DefaultZone=' "${FIREWALLD_CONF}"; then
+    sed -i 's/^DefaultZone=.*/DefaultZone=drop/' "${FIREWALLD_CONF}"
+else
+    echo 'DefaultZone=drop' >> "${FIREWALLD_CONF}"
+fi
+firewall-offline-cmd --get-default-zone | grep -qx drop
 # --------------------------------------------------------------------------
 
-firewall-offline-cmd --zone=FedoraWorkstation --add-service=ssh
-firewall-offline-cmd --zone=FedoraWorkstation --add-service=rdp
+firewall-offline-cmd --zone=drop --add-service=ssh
+firewall-offline-cmd --zone=drop --add-service=rdp
 
 ## Example: require a YubiKey for sudo (pam_yubico is in rpm_packages already).
 ##
