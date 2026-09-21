@@ -72,6 +72,7 @@ AO_LIGHT_SHA256="37596b822ba07964c1c1f97c002ed83d72f268a42bdd88adb32ebee749007d2
 
 GARAMOND_COMMIT="c02250684306c1cc22ebd1dbb9d2878213864a57"   # 1.0.1
 GARAMOND_SHA256="49780832d6eab4322ce195628c7c92d098e9914daa0a07d1110c399b9ebf7e15"
+
 ## Fetch one pinned file into /etc/skel/.config/emacs/<repo>/.
 ##
 ## The directory is created explicitly: curl's --create-dirs would make it
