@@ -11,6 +11,17 @@
 # the thing that needs it. Rewriting this list is expected; losing a service
 # out of the image while doing it is not, and that is what the split prevents.
 
+# Uncomment what you need.
+# cargo
+# chromium
+# gh
+# git-lfs
+# golang
+# libreoffice
+# mpv
+# rclone
+# rust
+# zig
 NetworkManager-tui
 PackageKit-gstreamer-plugin
 alacritty
@@ -108,6 +119,7 @@ packit
 pam_yubico
 pandoc
 pass
+perl-sigtrap
 pinentry-emacs
 pipewire-alsa
 pipewire-gstreamer
@@ -155,15 +167,3 @@ zig-libs
 zig-rpm-macros
 zig-srpm-macros
 zoxide
-
-# Uncomment what you need.
-# cargo
-# chromium
-# gh
-# git-lfs
-# golang
-# libreoffice
-# mpv
-# rclone
-# rust
-# zig
