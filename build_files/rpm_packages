@@ -11,17 +11,20 @@
 # the thing that needs it. Rewriting this list is expected; losing a service
 # out of the image while doing it is not, and that is what the split prevents.
 
-# Uncomment what you need.
-# cargo
-# chromium
-# gh
-# git-lfs
-# golang
-# libreoffice
-# mpv
-# rclone
-# rust
-# zig
+bubblewrap
+fuse3
+gtk4
+ncurses-libs
+libstdc++
+poppler-utils
+ImageMagick
+diffutils
+cascadia-code-nf-fonts
+kitty
+libpst
+weasyprint
+jetbrains-mono-fonts
+shfmt
 NetworkManager-tui
 PackageKit-gstreamer-plugin
 alacritty
@@ -93,7 +96,6 @@ jq
 just
 kernel-devel-matched
 kernel-headers
-kitty
 koji
 liberation-fonts
 libreoffice
