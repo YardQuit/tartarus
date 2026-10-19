@@ -4,27 +4,14 @@
 # One flat list, sorted alphabetically - easier to scan and to keep tidy than
 # grouped sections. Anything in the repos enabled in your base image works here.
 # To check a name before adding it:  dnf info <package>
-#
 # Not every package the image installs is here, deliberately. Anything a later
 # section of build.sh needs by name - tuned and firewalld for the units it
 # enables, plymouth for the splash screen - is installed there instead, beside
 # the thing that needs it. Rewriting this list is expected; losing a service
 # out of the image while doing it is not, and that is what the split prevents.
 
-bubblewrap
-fuse3
-gtk4
-ncurses-libs
-libstdc++
-poppler-utils
 ImageMagick
-diffutils
-cascadia-code-nf-fonts
-kitty
-libpst
-weasyprint
-jetbrains-mono-fonts
-shfmt
+ImageMagick-heic
 NetworkManager-tui
 PackageKit-gstreamer-plugin
 alacritty
@@ -35,25 +22,33 @@ audacity
 bat
 borgbackup
 btop
+bubblewrap
 cairo-devel
 cairo-gobject-devel
 cargo
 cargo-rpm-macros
 cargo2rpm
+cascadia-code-nf-fonts
 cascadia-fonts-all
 chromium
+clang
 clang 
 clippy
 cmake
 cronie-anacron
+diffutils
 dislocker
 distrobox
 dnf5-plugins
+easyeffects
 emacs
 enchant
+enchant-devel
 enchant2-devel
 evince
 evince-previewer
+exif
+exiv2
 fastfetch
 fd-find
 fedora-packager
@@ -61,11 +56,14 @@ fedora-review
 fedrq
 feh
 fontawesome-fonts-all
+foot
+fuse3
 fzf
 gh
 git
 git-lfs
 gnome-boxes
+gnome-connections
 gnome-rdp
 gnome-screenshot
 go-rpm-macros
@@ -83,22 +81,29 @@ gstreamer1-plugins-bad-free
 gstreamer1-plugins-good
 gstreamer1-plugins-good-gtk
 gstreamer1-plugins-ugly-free
+gtk4
 guile30
 helix
 htop
 hunspell-en-US
 hunspell-sv
+iftop
 inxi
 ipcalc
 isync
+jetbrains-mono-fonts
 jetbrains-mono-fonts-all
 jq
 just
 kernel-devel-matched
 kernel-headers
+kitty
 koji
 liberation-fonts
+libheif-tools
+libpst
 libreoffice
+libstdc++
 libtool
 libva-intel-media-driver
 libvirt-devel
@@ -109,12 +114,16 @@ macchanger
 maildir-utils
 make
 mediainfo
+mediawriter
+megatools
 minicom
 mozilla-openh264
 mpv
 mupdf
+ncurses-libs
 neovim
 nvidia-gpu-firmware
+openblas-devel
 osbuild
 osbuild-selinux
 packit
@@ -133,7 +142,12 @@ poppler
 poppler-devel
 poppler-glib
 poppler-glib-devel
+poppler-utils
+powertop
+ptyxis
+pv
 python3-pylint
+rclone
 ripgrep
 rpi-imager
 rpm-build
@@ -147,15 +161,21 @@ rust-srpm-macros
 rust-std-static-x86_64-pc-windows-gnu
 rust2rpm
 s3fs-fuse
+shfmt
 sqlite
 sshfs
+strace
 tailscale
 tcpdump
 telnet
 tldr
 tmux
 translate-shell
+unison
+unison-doc
+unison-gtk
 valgrind
+weasyprint
 wireguard-tools
 wireplumber
 wl-clipboard
