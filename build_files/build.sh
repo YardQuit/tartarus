@@ -214,45 +214,45 @@ skel_fetch YardQuit/garamond "${GARAMOND_COMMIT}" garamond.el       "${GARAMOND_
 
 # --- 1Password: uncomment every line down to the next ruler
 # --------------------------------------------------------------------------
-# ## /opt has to be a real directory before anything installs into it. The same
-# ## four lines as section 2, and harmless if that block is enabled as well.
+## /opt has to be a real directory before anything installs into it. The same
+## four lines as section 2, and harmless if that block is enabled as well.
 
-# if [ -L /opt ]; then
-#     rm /opt
-#     mkdir /opt
-# fi
+if [ -L /opt ]; then
+    rm /opt
+    mkdir /opt
+fi
 
-# ## System groups, so the package reuses them instead of allocating from the
-# ## human range. Worth pairing with the sysusers.d file described above.
+## System groups, so the package reuses them instead of allocating from the
+## human range. Worth pairing with the sysusers.d file described above.
 
-# groupadd -r onepassword
-# groupadd -r onepassword-mcp
+groupadd -r onepassword
+groupadd -r onepassword-mcp
 
-# rpm --import https://downloads.1password.com/linux/keys/1password.asc
-# dnf -y install https://downloads.1password.com/linux/rpm/stable/x86_64/1password-latest.rpm
+rpm --import https://downloads.1password.com/linux/keys/1password.asc
+dnf -y install https://downloads.1password.com/linux/rpm/stable/x86_64/1password-latest.rpm
 
-# ## The package drops in a dnf repository for its own auto-updates. An image
-# ## updates when you rebuild it, so the file has no purpose here.
+## The package drops in a dnf repository for its own auto-updates. An image
+## updates when you rebuild it, so the file has no purpose here.
 
-# rm -f /etc/yum.repos.d/1password.repo
-#
-# ## 1Password writes its own ~/.config/autostart entry when "Start at login" is
-# ## turned on in its settings. This one is here so that it does not have to be.
-# ## --silent is the app's own flag - its CLI defines it as "open to the system
-# ## tray without showing the main window" - and the path is the one the package's
-# ## own .desktop uses. Same /etc/xdg/autostart reasoning as the MEGAsync and
-# ## Trayscale blocks.
-# install -d -m 0755 /etc/xdg/autostart
-# cat > /etc/xdg/autostart/1password.desktop <<'DESKTOP'
-# [Desktop Entry]
-# Type=Application
-# Name=1Password
-# Icon=1password
-# Exec=sh -c "sleep 5; exec /opt/1Password/1password --silent 2>/dev/null"
-# Terminal=false
-# X-GNOME-Autostart-enabled=true
-# DESKTOP
-# chmod 0644 /etc/xdg/autostart/1password.desktop
+rm -f /etc/yum.repos.d/1password.repo
+
+## 1Password writes its own ~/.config/autostart entry when "Start at login" is
+## turned on in its settings. This one is here so that it does not have to be.
+## --silent is the app's own flag - its CLI defines it as "open to the system
+## tray without showing the main window" - and the path is the one the package's
+## own .desktop uses. Same /etc/xdg/autostart reasoning as the MEGAsync and
+## Trayscale blocks.
+install -d -m 0755 /etc/xdg/autostart
+cat > /etc/xdg/autostart/1password.desktop <<'DESKTOP'
+[Desktop Entry]
+Type=Application
+Name=1Password
+Icon=1password
+Exec=sh -c "sleep 5; exec /opt/1Password/1password --silent 2>/dev/null"
+Terminal=false
+X-GNOME-Autostart-enabled=true
+DESKTOP
+chmod 0644 /etc/xdg/autostart/1password.desktop
 # --------------------------------------------------------------------------
 
 ## Two things the package's install step does that are worth knowing about:
@@ -321,36 +321,36 @@ skel_fetch YardQuit/garamond "${GARAMOND_COMMIT}" garamond.el       "${GARAMOND_
 
 # --- MEGAsync: uncomment every line down to the next ruler
 # --------------------------------------------------------------------------
-# ## /opt has to be a real directory before anything installs into it. The same
-# ## four lines as section 2, and harmless if that block is enabled as well.
-# if [ -L /opt ]; then
-#     rm /opt
-#     mkdir /opt
-# fi
-#
-# dnf -y install https://mega.nz/linux/repo/Fedora_44/x86_64/megasync-Fedora_44.x86_64.rpm \
-#     || echo "megasync: dnf exited non-zero (expected) - verifying"
-# rpm -q megasync
-#
-# ## As with 1Password: a dnf repository for auto-updates, of no use in an image.
-# rm -f /etc/yum.repos.d/megasync.repo
-#
-# ## MEGAsync writes its own ~/.config/autostart entry the first time it is run
-# ## and told to start on login. This one is here so that it does not have to be:
-# ## a fresh account gets the tray client running without anyone opening the
-# ## preferences window first. The same /etc/xdg/autostart reasoning as the
-# ## Tailscale block in section 8, including how to switch it off per account.
-# install -d -m 0755 /etc/xdg/autostart
-# cat > /etc/xdg/autostart/megasync.desktop <<'DESKTOP'
-# [Desktop Entry]
-# Type=Application
-# Name=MEGAsync
-# Icon=mega
-# Exec=sh -c "sleep 5; exec megasync 2>/dev/null"
-# Terminal=false
-# X-GNOME-Autostart-enabled=true
-# DESKTOP
-# chmod 0644 /etc/xdg/autostart/megasync.desktop
+## /opt has to be a real directory before anything installs into it. The same
+## four lines as section 2, and harmless if that block is enabled as well.
+if [ -L /opt ]; then
+    rm /opt
+    mkdir /opt
+fi
+
+dnf -y install https://mega.nz/linux/repo/Fedora_44/x86_64/megasync-Fedora_44.x86_64.rpm \
+    || echo "megasync: dnf exited non-zero (expected) - verifying"
+rpm -q megasync
+
+## As with 1Password: a dnf repository for auto-updates, of no use in an image.
+rm -f /etc/yum.repos.d/megasync.repo
+
+## MEGAsync writes its own ~/.config/autostart entry the first time it is run
+## and told to start on login. This one is here so that it does not have to be:
+## a fresh account gets the tray client running without anyone opening the
+## preferences window first. The same /etc/xdg/autostart reasoning as the
+## Tailscale block in section 8, including how to switch it off per account.
+install -d -m 0755 /etc/xdg/autostart
+cat > /etc/xdg/autostart/megasync.desktop <<'DESKTOP'
+[Desktop Entry]
+Type=Application
+Name=MEGAsync
+Icon=mega
+Exec=sh -c "sleep 5; exec megasync 2>/dev/null"
+Terminal=false
+X-GNOME-Autostart-enabled=true
+DESKTOP
+chmod 0644 /etc/xdg/autostart/megasync.desktop
 # --------------------------------------------------------------------------
 
 ## The inotify limit belongs in a sysctl.d drop-in applied at boot instead, e.g.
