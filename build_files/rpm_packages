@@ -189,3 +189,5 @@ zig-libs
 zig-rpm-macros
 zig-srpm-macros
 zoxide
+gnome-shell-extensions
+gnome-shell-extension-appindicator
