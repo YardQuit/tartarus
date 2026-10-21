@@ -600,6 +600,48 @@ rm -f /etc/skel/.emacs
 dnf -y install https://github.com/YardQuit/csvdt/releases/download/rpm-release/csvdt.x86_64.rpm
 # --------------------------------------------------------------------------
 
+# --- Tuatara, the newest RPM from its GitHub releases
+# --------------------------------------------------------------------------
+## Not a fixed URL like CSVDT's, for two reasons. The file name carries the
+## version and a git date (tuatara-0.90-0.20261021gitda37aad.x86_64.rpm), so
+## it changes with every release. And GitHub's ".../releases/latest/download/"
+## shortcut skips anything marked as a pre-release, which every Tuatara
+## release so far has been, so it answers 404.
+##
+## The newest tag comes from the releases Atom feed instead. That feed lists
+## pre-releases too, newest first. It is a plain page rather than the API, so
+## the API's limit of 60 unauthenticated requests an hour does not apply.
+## Each release also ships a SHA256SUMS file under that fixed name. That file
+## gives the RPM's real name and its hash, so the build checks the download
+## before dnf sees it. All of it comes from the same GitHub release, so it
+## guards against a damaged download but vouches for nothing more than HTTPS
+## does. The package is unsigned, and dnf will print section 5's warning.
+##
+## Each build takes whatever is newest, the same way CSVDT's block does.
+## Everything the package installs is under /usr, and it runs no scriptlets,
+## so nothing in section 2 applies to it. Upstream publishes an x86_64 RPM
+## only.
+[ "$(uname -m)" = "x86_64" ] || { echo "Tuatara: no published RPM for $(uname -m)" >&2; exit 1; }
+
+TUATARA_RELEASES="https://github.com/Tuatara-Editor/tuatara/releases"
+TUATARA_TAG="$(curl -fsSL --retry 3 --retry-all-errors --connect-timeout 15 \
+    "${TUATARA_RELEASES}.atom" \
+    | sed -nE 's#.*/releases/tag/([^"]+)".*#\1#p' | sed -n 1p)"
+[ -n "${TUATARA_TAG}" ] || { echo "Tuatara: no release found in ${TUATARA_RELEASES}.atom" >&2; exit 1; }
+
+TUATARA_TMP="$(mktemp -d)"
+curl -fL --retry 3 --retry-all-errors --connect-timeout 15 \
+    -o "${TUATARA_TMP}/SHA256SUMS" "${TUATARA_RELEASES}/download/${TUATARA_TAG}/SHA256SUMS"
+TUATARA_RPM="$(awk '$2 ~ /\.x86_64\.rpm$/ {print $2; exit}' "${TUATARA_TMP}/SHA256SUMS")"
+[ -n "${TUATARA_RPM}" ] || { echo "Tuatara: no x86_64 RPM listed in release ${TUATARA_TAG}" >&2; exit 1; }
+
+curl -fL --retry 3 --retry-all-errors --connect-timeout 15 \
+    -o "${TUATARA_TMP}/${TUATARA_RPM}" "${TUATARA_RELEASES}/download/${TUATARA_TAG}/${TUATARA_RPM}"
+(cd "${TUATARA_TMP}" && grep -F "  ${TUATARA_RPM}" SHA256SUMS | sha256sum -c -)
+dnf -y install "${TUATARA_TMP}/${TUATARA_RPM}"
+rm -rf "${TUATARA_TMP}"
+# --------------------------------------------------------------------------
+
 
 #############################################################################
 ## 6. Optional: third-party repos and upstream installers
@@ -747,6 +789,51 @@ dnf -y install https://github.com/YardQuit/csvdt/releases/download/rpm-release/c
 #
 # printf 'export DISABLE_AUTOUPDATER=1\n' > /etc/profile.d/claude-code.sh
 # chmod 0644 /etc/profile.d/claude-code.sh
+# --------------------------------------------------------------------------
+
+# --- facematch, the engine behind Tuatara's facematch package
+# --------------------------------------------------------------------------
+## An AppImage rather than an RPM, but still one file that is a program, so
+## it goes in /usr/bin, versioned with the image, for the reason set out at
+## the top of this section. It is installed under the name "facematch"
+## because that is what the Tuatara package's *facematch-program* looks for on
+## PATH by default, so the init file that /etc/skel ships for Tuatara needs no
+## setting to find it.
+##
+## Not pinned to a release. Both release files have fixed names,
+## facematch-x86_64.AppImage and SHA256SUMS, so they are fetched by tag
+## without the API. The tag comes from where GitHub's ".../releases/latest"
+## redirects to, which is not rate limited either. Each build takes the newest
+## release, the same way CSVDT's and Tuatara's blocks do. Resolving the tag
+## once, rather than fetching both files through "latest/download", keeps the
+## AppImage and the sums from coming from two different releases if one is
+## published mid-build. Both files come from the same release, so the check
+## guards against a damaged download and nothing more.
+##
+## Roughly 530 MB in the image, because the models are inside the AppImage.
+##
+## Its runtime is the static one, so it needs fusermount rather than libfuse2
+## to mount itself when run by hand. Tuatara does not mount it at all: it
+## unpacks the AppImage into its own cache and runs it from there, in its
+## sandbox. Upstream publishes an x86_64 build only.
+[ "$(uname -m)" = "x86_64" ] || { echo "facematch: no published AppImage for $(uname -m)" >&2; exit 1; }
+
+FACEMATCH_RELEASES="https://github.com/YardQuit/facematch/releases"
+FACEMATCH_URL="$(curl -fsSL --retry 3 --retry-all-errors --connect-timeout 15 \
+    -o /dev/null -w '%{url_effective}' "${FACEMATCH_RELEASES}/latest")"
+case "${FACEMATCH_URL}" in
+    */releases/tag/?*) FACEMATCH_TAG="${FACEMATCH_URL##*/}" ;;
+    *) echo "facematch: no release found at ${FACEMATCH_RELEASES}/latest" >&2; exit 1 ;;
+esac
+
+FACEMATCH_TMP="$(mktemp -d)"
+for f in SHA256SUMS facematch-x86_64.AppImage; do
+    curl -fL --retry 3 --retry-all-errors --connect-timeout 15 \
+        -o "${FACEMATCH_TMP}/${f}" "${FACEMATCH_RELEASES}/download/${FACEMATCH_TAG}/${f}"
+done
+(cd "${FACEMATCH_TMP}" && grep -F "  facematch-x86_64.AppImage" SHA256SUMS | sha256sum -c -)
+install -m 0755 "${FACEMATCH_TMP}/facematch-x86_64.AppImage" /usr/bin/facematch
+rm -rf "${FACEMATCH_TMP}"
 # --------------------------------------------------------------------------
 
 
